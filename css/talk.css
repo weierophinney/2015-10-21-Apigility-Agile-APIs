@@ -1,0 +1,43 @@
+body::after {
+  background-image: url('../img/hard-rock-hotel.jpg');
+  -webkit-background-size: cover;
+     -moz-background-size: cover;
+      -ms-background-size: cover;
+       -o-background-size: cover;
+          background-size: cover;
+  content: "";
+  opacity: 0.2;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
+}
+
+.highlight-red, h2.highlight-red {
+  color: #FF0000;
+  text-shadow: 1px 1px 2px #FFFFFF;
+}
+
+.success {
+  color: #00FF00;
+  text-shadow: 1px 1px 2px #FFFFFF;
+}
+
+.reveal section img.whitefill {
+  background-color: #FFFFFF;
+  border: none;
+}
+
+.whitefill {
+  background-color: #FFFFFF;
+}
+
+.reveal pre code.stretch-vertical {
+  max-height: 575px;
+}
+
+.reveal pre.stretch-horizontal {
+  width: 100%;
+}

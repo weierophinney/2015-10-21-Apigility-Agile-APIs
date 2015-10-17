@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Apigility: Agile APIs</title>
+
+		<meta name="description" content="Apigility: Agile APIs">
+		<meta name="author" content="Matthew Weier O'Phinney">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/league.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="css/highlight-solarized-light.css">
+
+    <!-- Custom styles -->
+		<link rel="stylesheet" href="css/talk.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+		<div class="reveal">
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Apigility</a></h1>
+					<h2>Agile APIs</a></h2>
+          
+          <p><small>
+            <a href="https://mwop.net">Matthew Weier O'Phinney</a><br />
+            <a href="http://twitter.com/mwop">@mwop</a> <br />
+            21 October 2015
+          </small></p>
+				</section>
+
+				<section>
+					<h2>API</h2>
+
+          <blockquote>
+            Application Programming Interface
+          </blockquote>
+
+					<p class="fragment">
+						How software should interact.
+					</p>
+				</section>
+
+        <section>
+          <h2>Web API</h2>
+
+					<p class="fragment">
+            APIs delivered over HyperText Transfer Protocol (<strong>HTTP</strong>)
+          </p>
+        </section>
+
+				<section>
+					<h2>REST</h2>
+
+          <blockquote>
+            REpresentational State Transfer
+          </blockquote>
+
+					<p class="fragment">
+						An architecture designed around the HTTP specification.
+					</p>
+				</section>
+
+				<section>
+					<h2>RESTful APIs</h2>
+
+					<p>
+						REST leverages HTTP's strengths, and builds on:
+          </p>
+
+          <ul>
+						<li>URIs as <u>unique identifiers</u> for resources</li>
+						<li>Rich set of <u>HTTP verbs</u> for operations on resources</li>
+						<li>Specifying the <u>representation format</u> for payloads</li>
+						<li>Linking between resources (<u>hypermedia controls</u>)</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>HATEOAS</h2>
+
+					<p><strong>Hypermedia As The Engine Of Application State</strong></p>
+				</section>
+
+				<section>
+					<h2>Glory of REST</h2>
+
+					<p>The <a href="http://martinfowler.com/articles/richardsonMaturityModel.html">Richardson Maturity Model</a>:</p>
+
+					<p><img src="img/glory_of_rest.png"></p>
+				</section>
+
+				<section>
+					<h2>REST: Level 0</h2>
+
+          <ul>
+            <li>The usage of <strong>HTTP</strong> as communication layer</li>
+            <li class="fragment">A single format for data representation (e.g. JSON)</li>
+            <li class="fragment">Basically a Remote Procedure Call (<strong>RPC</strong>)</li>
+          </ul>
+				</section>
+
+				<section>
+					<h2>REST: Level 1</h2>
+
+          <ul>
+            <li>URIs as <strong>unique identifiers</strong> for resources; e.g.
+              the resource <strong>User</strong> might be identified as:<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;<code>http://domain/api/user[/:user_id]</code><br />
+              where <strong>user_id</strong> is an optional parameter.</li>
+          </ul>
+				</section>
+
+				<section>
+					<h2>REST: Level 2</h2>
+
+          <ul>
+            <li>Usage of HTTP verbs for operations on resources:
+              <ul>
+                <li><strong>POST</strong> =&gt; create a new entity</li>
+                <li><strong>GET</strong> =&gt; retrieve a collection or entity</li>
+                <li><strong>PATCH</strong> =&gt; update an entity</li>
+                <li>etc.</li>
+              </ul>
+            </li>
+          </ul>
+				</section>
+
+				<section>
+					<h2>REST: Level 3</h2>
+
+					<p>Linking between resources to indicate relationships
+            (<strong>hypermedia controls</strong>)</p>
+
+          <div class="fragment">
+            <pre><code class="lang-http" data-trim>
+GET /api/user/mwop
+
+{
+	"_links": {
+		"self": {
+			"href": "http://domain/api/user/mwop"
+		},
+		"contacts": [
+			{ "href": "http://domain/api/user/andi" },
+			{ "href": "http://domain/api/user/zeevs" }
+		]
+	},
+	"id": "mwop",
+	"name": "Matthew Weier O'Phinney"
+}
+            </code></pre>
+
+            <p><small>JSON-HAL format</small></p>
+          </div>
+				</section>
+
+				<section>
+					<h2>Advantages of REST</h2>
+
+          <ul>
+            <li class="fragment">Scalable architecture</li>
+            <li class="fragment">Ease of consumption</li>
+            <li class="fragment">Reduced client/server coupling</li>
+            <li class="fragment">Discoverability</li>
+          </ul>
+				</section>
+
+				<section>
+					<h2>REST in PHP</h2>
+
+          <div class="fragment">
+            <pre><code class="lang-php" data-trim>
+header('Content-Type: application/json');
+echo json_encode([
+	'id'   => 'mwop',
+	'name' => 'Matthew Weier O\'Phinney'
+]);
+            </code></pre>
+
+            <p>Quite simple, right?</p>
+          </div>
+				</section>
+
+        <section>
+          <h2 class="highlight-red">Wrong!</h2>
+
+          <p>What about:</p>
+
+          <ul>
+            <li class="fragment">Honoring the client's requested format?</li>
+            <li class="fragment">Resource linking? (what can you do from here?)</li>
+            <li class="fragment">HTTP status?</li>
+          </ul>
+
+          <aside class="notes">
+            <ul>
+              <li>It looks easy, until you start thinking of the bigger picture.</li>
+              <li>Little details matter, even for small examples!</li>
+            </ul>
+          </aside>
+        </section>
+
+				<section>
+					<h2>RESTful in practice?</h2>
+
+					<p><img src="img/begin.jpg"></p>
+				</section>
+
+				<section>
+					<h2>Issues</h2>
+
+					<ul>
+						<li class="fragment">Which representation format should you use?</li>
+						<li class="fragment">How will you provide error messages?</li>
+						<li class="fragment">Will you support authentication? What kind?</li>
+						<li class="fragment">How will you version the API?</li>
+						<li class="fragment">Where will you link between resources?</li>
+						<li class="fragment">What about API documentation?</li>
+					</ul>
+				</section>
+
+				<section>
+
+					<h2>Possible answers</h2>
+					<ul>
+						<li class="fragment">Representation format: <span class="success">JSON</span></li>
+						<li class="fragment">Error representation: <span class="success">application/problem+json</span></li>
+						<li class="fragment">Authentication: <span class="success">OAuth2</span></li>
+            <li class="fragment">API versioning: <span class="success">Accept and Content-Type headers, URI</span></li>
+						<li class="fragment">Resource linking: <span class="success">JSON HAL</span></li>
+						<li class="fragment">API documentation: <span class="success">HTML, Swagger, API
+                Blueprint</span></li>
+					</ul>
+				</section>
+
+				<section>
+					<img src="img/ag-hero.png">
+				</section>
+
+				<section>
+					<h2>Apigility</h2>
+
+					<ul>
+						<li>API <strong>builder</strong> and <strong>engine</strong>.</li>
+						<li>Open source project by <a href="http://www.zend.com">Zend Technologies</a></li>
+						<li>Built on top of ZF2; use it standalone, add it to an existing
+              ZF2 application, or incorporate it as part of another PHP application!</li>
+						<li>Admin UI is built using <a href="https://angularjs.org/">AngularJS</a>.</li>
+						<li>Latest stable version is 1.3.1</li>
+						<li>Official website: <a href="http://www.apigility.org">apigility.org</a></li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Main features</h2>
+
+					<ul>
+							<li class="fragment">Offers RPC and REST services.</li>
+							<li class="fragment">JSON (HAL) as default format.</li>
+							<li class="fragment">Error handling (Problem Details for HTTP APIs).</li>
+							<li class="fragment">Content negotiation.</li>
+							<li class="fragment">Versioning (via URI and Accept header, and for backing code).</li>
+							<li class="fragment">Data validation.</li>
+							<li class="fragment">Authentication (HTTP Basic/Digest, OAuth2).</li>
+							<li class="fragment">Interactive documentation (HTML, Swagger, Blueprint).</li>
+							<li class="fragment">Deployment; build production package files.</li>
+					</ul>
+				</section>
+
+				<section>
+          <h2>JSON HAL</h2>
+
+          <ul>
+            <li>JSON Hypertext Application Language (<a href="http://tools.ietf.org/html/draft-kelly-json-hal-07">internet draft</a>)</li>
+            <li class="fragment">Example:
+              <pre><code class="lang-http" data-trim>
+GET /api/user/mwop
+
+{
+  "_links": {
+    "self": {
+      "href": "http://domain/api/user/mwop"
+    }
+  }
+  "id": "mwop",
+  "name": "Matthew Weier O'Phinney"
+}
+              </pre></code>
+            </li>
+          </ul>
+				</section>
+
+				<section>
+          <h2>Embedded Entities</h2>
+
+          <pre><code class="lang-json" data-trim>
+{
+  "_embedded": {
+    "contacts": [
+      {
+        "_links": {
+          "self": {
+            "href": "http://domain/api/user/zeevs"
+          }
+        },
+        "id": "zeevs",
+        "name": "Zeev Suraski"
+      }
+    ]
+  }
+}
+          </code></pre>
+				</section>
+
+				<section>
+          <h2>Collections</h2>
+
+          <pre><code class="lang-json stretch-vertical" data-trim>
+{
+    "_links": {
+        "self": {
+            "href": "http://domain/api/user?page=3"
+        },
+        "first": {
+            "href": "http://domain/api/user"
+        },
+        "prev": {
+            "href": "http://domain/api/user?page=2"
+        },
+        "next": {
+            "href": "http://domain/api/user?page=4"
+        },
+        "last": {
+            "href": "http://domain/api/user?page=133"
+        }
+    }
+    "count": 3,
+    "total": 498,
+    "_embedded": {
+        "users": [ /* ... */ ]
+    }
+}
+          </code></pre>
+				</section>
+
+				<section>
+          <h2>Problem Details for HTTP APIs</h2>
+
+          <p><em>AKA API Problem</em></p>
+
+          <ul>
+            <li class="fragment"><a
+              href="https://tools.ietf.org/html/draft-ietf-appsawg-http-problem-01">ietf-appsawg-http-problem</a>
+              (internet draft)</li>
+						<li class="fragment">Example:
+              <pre class="stretch-horizontal"><code class="lang-http" data-trim>
+HTTP/1.1 405 Method Not Allowed
+Content-Type: application/problem+json
+
+{
+    "detail": "The GET method has not been defined for entities",
+    "status": 405,
+    "title": "Method Not Allowed",
+    "type": "http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html"
+}
+            </code></pre>
+            </li>
+					</ul>
+				</section>
+
+        <section>
+          <h2>Content negotiation</h2>
+
+          <blockquote>
+            Request and provide different mediatypes for the same resource.
+          </blockquote>
+
+          <ul>
+						<li class="fragment"><em>Clients</em> indicate what mediatype they want:
+              <pre><code class="lang-http" data-trim>
+Accept: application/hal+json, application/json
+              </code></pre>
+						</li>
+						<li class="fragment">or <em>submit</em> data using a mediatype:
+              <pre><code class="lang-http" data-trim>
+Content-Type: application/vnd.conference+json
+              </code></pre>
+						</li>
+						<li class="fragment">and <em>servers</em> respond with a mediatype:
+              <pre><code class="lang-http" data-trim>
+Content-Type: application/hal+json
+              </code></pre>
+              (hopefully one the client accepts!)
+						</li>
+					</ul>
+				</section>
+
+				<section>
+          <h2>API Versioning</h2>
+
+          <p>Agility uses three approaches:</p>
+
+          <ul>
+            <li class="fragment">In the URL, as the first segment:
+              <pre class="stretch-horizontal"><code data-trim>
+/v1/api/user
+              </code></pre>
+            </li>
+            <li class="fragment">Via <code>Accept</code> header:
+              <pre class="stretch-horizontal"><code class="lang-http" data-trim>
+Accept: application/vnd.example.v1+json
+              </code></pre>
+            </li>
+            <li class="fragment">In PHP namespaces:
+              <pre class="stretch-horizontal"><code class="lang-php" data-trim>
+namespace Conference\V1\Rest\Speaker
+              </code></pre>
+            </li>
+					</ul>
+				</section>
+
+				<section>
+          <h2>Authentication</h2>
+
+          <p>Apigility officially supports three authentication systems:</p>
+
+          <ul>
+            <li><a href="http://en.wikipedia.org/wiki/Basic_access_authentication">HTTP Basic</a></li>
+            <li><a href="http://en.wikipedia.org/wiki/Digest_access_authentication">HTTP Digest</a></li>
+            <li><a href="http://oauth.net/2/">OAuth2</a></li>
+          </ul>
+
+          <aside class="notes">
+            <ul>
+              <li>Note that we <em>unofficially</em> support arbitrary
+                authentication, as the authentication system is
+                <em>event-driven</em>, allowing users to supply their own
+                listeners.</li>
+            </ul>
+          </aside>
+				</section>
+
+        <section>
+          <h2>Authorization</h2>
+
+          <ul>
+            <li class="fragment">Public API by default (configurable!)</li>
+            <li class="fragment">Enable/disable authentication gateway per-method of any service.</li>
+            <li class="fragment">Allows providing your own ACLs (zend-permissions-acl).</li>
+            <li class="fragment">Listen to the <code>authorization</code> event for custom
+              assertions.</li>
+          </ul>
+        </section>
+
+				<section>
+					<h2>Installation</h2>
+
+					<p>Web-based installer:</p>
+
+					<pre><code class="lang-bash" data-trim>
+$ curl -sS https://apigility.org/install | php
+          </code></pre>
+
+					<p>Or, if you don't have <a href="http://curl.haxx.se/">CURL</a> installed:</p>
+
+					<pre><code class="lang-bash" data-trim>
+$ php -r "readfile('https://apigility.org/install');" | php
+          </code></pre>
+
+          <p>Or just use Composer!</p>
+
+					<pre><code class="lang-bash" data-trim>
+$ composer create-project zfcampus/zf-apigility-skeleton apigility
+          </code></pre>
+				</section>
+
+				<section>
+					<h2>Apigility UI</h2>
+
+					<p>Open the browser to <a href="http://localhost:8888" target="_blank">http://localhost:8888</a></p>
+
+					<p><img src="img/apigility-ui.png"></p>
+
+          <aside class="notes">
+            <ul>
+              <li>Demo time: ping API</li>
+            </ul>
+          </aside>
+				</section>
+
+				<section>
+          <h2>Some resources</h2>
+
+          <small>
+            <ul>
+              <li>Roy Thomas Fielding, <a href="http://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm">Representational State Transfer (REST)</a>, Phd Thesis, 2000</li>
+              <li>L. Richardson, M. Amundsen, <a href="http://restfulwebapis.com/">RESTful Web APIs</a>, O'Reilly 2013</li>
+              <li>J. Webber, S. Parastatidis, I. Robinson, <a href="http://restinpractice.com/book/">REST in Practice</a>, O'Reilly 2010</li>
+              <li>Subbu Allamaraju, <a href="">RESTful Web Services Cookbook</a>, O'Reilly 2010</li>
+              <li>Phil Sturgeon, <a href="https://leanpub.com/build-apis-you-wont-hate">Build APIs You Won't Hate</a>, LeanPub 2014</li>
+              <li>Lorna Jane Mitchell, <a href="http://shop.oreilly.com/product/0636920028291.do">PHP Web Services </a>, O'Reilly 2013</li>
+              <li>Joshua Thijssen, <a href="http://restcookbook.com/">The RESTful CookBook</a>, website 2012</li>
+              <li>Rob Allen, <a href="http://techportal.inviqa.com/2013/12/03/create-a-restful-api-with-apigility/">Create a RESTful API with Apigility</a>, techPortal</li>
+              <li>Enrico Zimuel, <a href="http://spaghetti.io/cont/article/create-api-for-existing-php-project-using-apigility/43/1.html">Create API for existing PHP project using Apigility</a>, spaghetti.io</li>
+              <li>Enrico Zimuel, <a href="http://www.zend.com/en/webinars/recorded/show/2193_building+restful+apis+with+apigility+">Building RESTful APIs with Apigility</a>, Zend's webinar</li>
+            </ul>
+          </small>
+				</section>
+
+				<section>
+					<h2>Thanks!</h2>
+
+					<p>Rate this talk: <a href="https://joind.in/15564">https://joind.in/15564</a></p>
+					<p>More information on <a href="http://www.apigility.org">apigility.org</a></p>
+					<p><a href="https://twitter.com/Apigility">@Apigility</a></p>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true },
+        	{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+
+				]
+			});
+		</script>
+	</body>
+</html>
