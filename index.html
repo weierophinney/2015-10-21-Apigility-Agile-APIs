@@ -52,6 +52,10 @@
           </small></p>
 				</section>
 
+        <section>
+          <h1>Terminology</h1>
+        </section>
+
 				<section>
 					<h2>API</h2>
 
@@ -87,28 +91,7 @@
 				<section>
 					<h2>RESTful APIs</h2>
 
-					<p>
-						REST leverages HTTP's strengths, and builds on:
-          </p>
-
-          <ul>
-						<li>URIs as <u>unique identifiers</u> for resources</li>
-						<li>Rich set of <u>HTTP verbs</u> for operations on resources</li>
-						<li>Specifying the <u>representation format</u> for payloads</li>
-						<li>Linking between resources (<u>hypermedia controls</u>)</li>
-					</ul>
-				</section>
-
-				<section>
-					<h2>HATEOAS</h2>
-
-					<p><strong>Hypermedia As The Engine Of Application State</strong></p>
-				</section>
-
-				<section>
-					<h2>Glory of REST</h2>
-
-					<p>The <a href="http://martinfowler.com/articles/richardsonMaturityModel.html">Richardson Maturity Model</a>:</p>
+					<p>Defined in terms of the <a href="http://martinfowler.com/articles/richardsonMaturityModel.html">Richardson Maturity Model</a>:</p>
 
 					<p><img src="img/glory_of_rest.png"></p>
 				</section>
@@ -117,9 +100,8 @@
 					<h2>REST: Level 0</h2>
 
           <ul>
-            <li>The usage of <strong>HTTP</strong> as communication layer</li>
-            <li class="fragment">A single format for data representation (e.g. JSON)</li>
-            <li class="fragment">Basically a Remote Procedure Call (<strong>RPC</strong>)</li>
+            <li>The usage of <strong>HTTP</strong> as communication layer…</li>
+            <li class="fragment">for implementing Remote Procedure Calls (<strong>RPC</strong>)</li>
           </ul>
 				</section>
 
@@ -127,10 +109,9 @@
 					<h2>REST: Level 1</h2>
 
           <ul>
-            <li>URIs as <strong>unique identifiers</strong> for resources; e.g.
-              the resource <strong>User</strong> might be identified as:<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;<code>http://domain/api/user[/:user_id]</code><br />
-              where <strong>user_id</strong> is an optional parameter.</li>
+            <li>URIs as <strong>unique identifiers</strong></li>
+            <li class="fragment">Example: reference the "User" resource via<br />
+              <code>http://example.com/api/user[/:user_id]</code></li>
           </ul>
 				</section>
 
@@ -179,13 +160,32 @@ GET /api/user/mwop
 				</section>
 
 				<section>
-					<h2>Advantages of REST</h2>
+					<h2>tl;dr</h2>
+
+					<p>
+						REST is characterized by:
+          </p>
 
           <ul>
-            <li class="fragment">Scalable architecture</li>
-            <li class="fragment">Ease of consumption</li>
-            <li class="fragment">Reduced client/server coupling</li>
+            <li>Usage of HTTP as the transport protocol</li>
+						<li>URIs as <u>unique identifiers</u> for resources</li>
+						<li>Full usage of <u>HTTP verbs</u> for operations on resources</li>
+						<li>Linking between resources (<u>hypermedia controls</u>)</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>HATEOAS</h2>
+
+					<p><strong>Hypermedia As The Engine Of Application State</strong></p>
+				</section>
+
+				<section>
+					<h2>Why REST?</h2>
+
+          <ul>
             <li class="fragment">Discoverability</li>
+            <li class="fragment">Reduced client/server coupling</li>
           </ul>
 				</section>
 
@@ -513,29 +513,10 @@ $ composer create-project zfcampus/zf-apigility-skeleton apigility
 				</section>
 
 				<section>
-          <h2>Some resources</h2>
-
-          <small>
-            <ul>
-              <li>Roy Thomas Fielding, <a href="http://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm">Representational State Transfer (REST)</a>, Phd Thesis, 2000</li>
-              <li>L. Richardson, M. Amundsen, <a href="http://restfulwebapis.com/">RESTful Web APIs</a>, O'Reilly 2013</li>
-              <li>J. Webber, S. Parastatidis, I. Robinson, <a href="http://restinpractice.com/book/">REST in Practice</a>, O'Reilly 2010</li>
-              <li>Subbu Allamaraju, <a href="">RESTful Web Services Cookbook</a>, O'Reilly 2010</li>
-              <li>Phil Sturgeon, <a href="https://leanpub.com/build-apis-you-wont-hate">Build APIs You Won't Hate</a>, LeanPub 2014</li>
-              <li>Lorna Jane Mitchell, <a href="http://shop.oreilly.com/product/0636920028291.do">PHP Web Services </a>, O'Reilly 2013</li>
-              <li>Joshua Thijssen, <a href="http://restcookbook.com/">The RESTful CookBook</a>, website 2012</li>
-              <li>Rob Allen, <a href="http://techportal.inviqa.com/2013/12/03/create-a-restful-api-with-apigility/">Create a RESTful API with Apigility</a>, techPortal</li>
-              <li>Enrico Zimuel, <a href="http://spaghetti.io/cont/article/create-api-for-existing-php-project-using-apigility/43/1.html">Create API for existing PHP project using Apigility</a>, spaghetti.io</li>
-              <li>Enrico Zimuel, <a href="http://www.zend.com/en/webinars/recorded/show/2193_building+restful+apis+with+apigility+">Building RESTful APIs with Apigility</a>, Zend's webinar</li>
-            </ul>
-          </small>
-				</section>
-
-				<section>
 					<h2>Thanks!</h2>
 
 					<p>Rate this talk: <a href="https://joind.in/15564">https://joind.in/15564</a></p>
-					<p>More information on <a href="http://www.apigility.org">apigility.org</a></p>
+					<p>More information on <a href="https://apigility.org">apigility.org</a></p>
 					<p><a href="https://twitter.com/Apigility">@Apigility</a></p>
 				</section>
 			</div>
